@@ -1,6 +1,14 @@
 # vue-chalkack
 
-> A Vue.js project
+> 온라인 사진 갤러리
+
+## Tech Stacks
+
+- Vue
+- Vuex
+- vue-router
+- vuefire (Firebase bindings for Vue)
+- Firebase
 
 ## Build Setup
 
