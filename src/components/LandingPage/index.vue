@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import firebase from 'helpers/firebase';
+import firebase from '~helpers/firebase';
 
 const checkAuth = () => {
   firebase.auth().onAuthStateChanged((user) => {

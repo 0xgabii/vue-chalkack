@@ -3,7 +3,7 @@ import Router from 'vue-router';
 
 import store from '../store';
 
-import LandingPage from 'components/LandingPage';
+import LandingPage from '~components/LandingPage';
 
 Vue.use(Router);
 
