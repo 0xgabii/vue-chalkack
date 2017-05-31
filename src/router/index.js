@@ -15,26 +15,21 @@ const router = new Router({
   ],
 });
 
-// check auth
 router.beforeEach((to, from, next) => {
+  // 인증이 필요한 라우트인가?
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    // 이 라우트는 인증이 필요하며 로그인 한 경우 확인하십시오.
-    // 그렇지 않은 경우 로그인 페이지로 리디렉션하십시오.
-    console.log('?');
-    if (store.getters['auth/checkAuth']) {
+    // store에서 인증되었는지 확인
+    if (store.getters['auth/getMyAuth']) {
       next();
+    // 인증실패했을 경우, 로그인페이지로 리다이렉트
     } else {
-      store.dispatch('auth/updateAuth').then(() => {
-        next();
-      }, () => {
-        next({
-          path: '/signin',
-          query: { redirect: to.fullPath },
-        });
-      });
+      next({ name: 'LoginPage' });
     }
+  // 로그인했을 경우, 랜딩페이지에는 접근하지 못함
+  } else if (store.getters['auth/getMyAuth']) {
+    next({ name: 'UserPage' });
   } else {
-    next(); // 반드시 next()를 호출하십시오!
+    next();
   }
 });
 

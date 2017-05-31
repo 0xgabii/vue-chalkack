@@ -11,7 +11,7 @@
 // import firebase from '~helpers/firebase';
 
 export default {
-  name: 'SignUpPage',
+  name: 'RegisterPage',
   data: () => ({
     form: {
       email: '',
