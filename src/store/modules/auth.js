@@ -1,30 +1,20 @@
 import firebase from '~helpers/firebase';
 import store from '../../store';
-import router from '../../router';
+
+const database = firebase.database();
 
 // Auth 감시자 메서드
 firebase.auth().onAuthStateChanged((user) => {
-  if (user) {
-    store.dispatch('auth/checkAuth', user);
-    router.push({ name: 'UserPage' });
-  } else {
-    store.dispatch('auth/checkAuth');
-
-    if (router.history.current.name === 'LoginPage'
-      || router.history.current.name === 'RegisterPage') {
-      router.push({ name: router.history.current.name });
-    } else {
-      router.push({ name: 'LandingPage' });
-    }
-  }
+  store.dispatch('auth/updateAuth', user);
 });
 
 export default {
   namespaced: true,
   state: {
-    loading: false,
-    isAuthenticated: false,
+    isAuthenticated: true,
     me: {},
+    success: {},
+    error: {},
   },
   getters: {
     getMyAuth(state) {
@@ -32,30 +22,59 @@ export default {
     },
   },
   mutations: {
-    CHECK_AUTH_START(state) {
-      state.loading = true;
-    },
-    UPDATE_AUTH(state, obj) {
+    UPDATE_AUTH(state, user) {
+      state.me = user;
       state.isAuthenticated = true;
-      state.me = obj;
-      state.loading = false;
     },
-    CHECK_AUTH_FAILED(state) {
+    UPDATE_AUTH_FAILED(state) {
       state.isAuthenticated = false;
       state.me = {};
-      state.loading = false;
+    },
+    UPDATE_AUTH_PROFILE_SUCCEED(state) {
+      state.success = {
+        ...state.success,
+        auth: '성공적으로 업데이트되었습니다',
+      };
+      state.error = {};
+    },
+    UPDATE_AUTH_PROFILE_FAILED(state, error) {
+      state.error = {
+        ...state.error,
+        auth: error,
+      };
+      state.success = {};
     },
   },
   actions: {
-    checkAuthStart({ commit }) {
-      commit('CHECK_AUTH_START');
-    },
-    checkAuth({ commit }, user) {
+    updateAuth({ commit }, user) {
       if (user) {
-        commit('UPDATE_AUTH', user);
+        const { providerData, uid, displayName, email, photoURL } = user;
+        const userData = {
+          displayName,
+          photoURL,
+          email: email || providerData[0].email,
+          providerInfo: providerData[0],
+        };
+        const userInDatabase = database.ref(`users/${uid}`);
+        // save userData to database
+        userInDatabase.set(userData);
+        // get userData from database (on 'value')
+        userInDatabase.on('value', (snapshot) => {
+          commit('UPDATE_AUTH', snapshot.val());
+        });
       } else {
-        commit('CHECK_AUTH_FAILED');
+        commit('UPDATE_AUTH_FAILED');
       }
+    },
+    updateAuthProfile({ commit, dispatch }, userObj) {
+      const currentUser = firebase.auth().currentUser;
+
+      currentUser.updateProfile(userObj).then(() => {
+        dispatch('updateAuth', currentUser);
+        commit('UPDATE_AUTH_PROFILE_SUCCEED');
+      }, (error) => {
+        commit('UPDATE_AUTH_PROFILE_FAILED', error);
+      });
     },
   },
 };
