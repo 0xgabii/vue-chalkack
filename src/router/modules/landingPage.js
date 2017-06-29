@@ -1,7 +1,6 @@
 import LandingPage from '~components/LandingPage';
 import Main from '~components/LandingPage/Pages/Main';
-import Login from '~components/LandingPage/Pages/Login';
-import Register from '~components/LandingPage/Pages/Register';
+import Auth from '~components/LandingPage/Pages/Auth';
 
 export default [
   {
@@ -15,13 +14,8 @@ export default [
       },
       {
         path: 'auth',
-        name: 'LoginPage',
-        component: Login,
-      },
-      {
-        path: 'auth/register',
-        name: 'RegisterPage',
-        component: Register,
+        name: 'AuthPage',
+        component: Auth,
       },
     ],
   },
