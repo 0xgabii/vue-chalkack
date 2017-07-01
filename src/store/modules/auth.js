@@ -1,11 +1,18 @@
 import firebase from '~helpers/firebase';
 import store from '../../store';
+import router from '../../router';
 
 const database = firebase.database();
 
 // Auth 감시자 메서드
 firebase.auth().onAuthStateChanged((user) => {
   store.dispatch('auth/updateAuth', user);
+
+  if (user) {
+    router.push({ name: 'UserPage' });
+  } else {
+    router.push({ name: 'AuthPage' });
+  }
 });
 
 export default {

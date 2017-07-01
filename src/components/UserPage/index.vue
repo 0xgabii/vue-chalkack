@@ -1,20 +1,27 @@
 <template>
   <section class="userPage">
+    <layout-header />
     UserPage
 
-    <button @click="signOut">SignOut</button>
+    <router-view></router-view>
+
   </section>
 </template>
 
 <script>
-import firebase from '~helpers/firebase';
+import { mapState } from 'vuex';
+
+import LayoutHeader from './Layout/Header';
 
 export default {
   name: 'UserPage',
-  methods: {
-    signOut() {
-      firebase.auth().signOut();
-    },
+  computed: {
+    ...mapState('auth', [
+      'me',
+    ]),
+  },
+  components: {
+    LayoutHeader,
   },
 };
 </script>
