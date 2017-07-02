@@ -17,8 +17,17 @@ export default {
   name: 'UserPage',
   computed: {
     ...mapState('auth', [
+      'isAuthenticated',
       'me',
     ]),
+  },
+  watch: {
+    isAuthenticated(bools) {
+      if (!bools) this.$router.push({ name: 'LandingPage' });
+    },
+  },
+  created() {
+    if (!this.isAuthenticated) this.$router.push({ name: 'LandingPage' });
   },
   components: {
     LayoutHeader,

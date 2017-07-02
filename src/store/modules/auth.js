@@ -1,24 +1,17 @@
 import firebase from '~helpers/firebase';
 import store from '../../store';
-import router from '../../router';
 
 const database = firebase.database();
 
-// Auth 감시자 메서드
+// auth observer
 firebase.auth().onAuthStateChanged((user) => {
   store.dispatch('auth/updateAuth', user);
-
-  if (user) {
-    router.push({ name: 'UserPage' });
-  } else {
-    router.push({ name: 'AuthPage' });
-  }
 });
 
 export default {
   namespaced: true,
   state: {
-    isAuthenticated: true,
+    isAuthenticated: false,
     me: {},
     success: {},
     error: {},
@@ -55,6 +48,10 @@ export default {
   actions: {
     updateAuth({ commit }, user) {
       if (user) {
+        /*
+          extract payload 'user' data
+          make data-structor 'userData'
+        */
         const { providerData, uid, displayName, email, photoURL } = user;
         const userData = {
           displayName,
@@ -62,6 +59,7 @@ export default {
           email: email || providerData[0].email,
           providerInfo: providerData[0],
         };
+        // user database from firebase
         const userInDatabase = database.ref(`users/${uid}`);
         // save userData to database
         userInDatabase.set(userData);
