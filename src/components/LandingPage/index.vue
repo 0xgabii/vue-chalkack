@@ -1,13 +1,6 @@
 <template>
   <section class="landingPage">
-    Chalkack
-    <header>
-      <router-link :to="{ name: 'AuthPage'}">
-        SignIn/SignUp
-      </router-link>
-
-      사용자: {{ me }}
-    </header>
+    <layout-header />
 
     <router-view></router-view>
   </section>
@@ -16,12 +9,13 @@
 <script>
 import { mapState } from 'vuex';
 
+import LayoutHeader from './Layout/Header';
+
 export default {
   name: 'LandingPage',
   computed: {
     ...mapState('auth', [
       'isAuthenticated',
-      'me',
     ]),
   },
   watch: {
@@ -31,6 +25,9 @@ export default {
   },
   created() {
     if (this.isAuthenticated) this.$router.push({ name: 'UserPage' });
+  },
+  components: {
+    LayoutHeader,
   },
 };
 </script>

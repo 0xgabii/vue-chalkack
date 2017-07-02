@@ -1,17 +1,24 @@
 <template>
-  <section class="auth">
+  <section class="authPage">
     {{ error }}
-    <div>
-      <input v-model="user.email" />
-      <input type="password" v-model="user.pwd" />
+    <div class="form">
 
-      <button @click="SignIn">SignIn</button>
-      <button @click="SignUp">SignUp</button>
-    </div>
-    <div>
-      <button @click="SignInWithProvider('Google')">Google</button>
-      <button @click="SignInWithProvider('Facebook')">Facebook</button>
-      <button @click="SignInWithProvider('Github')">Github</button>
+      <div class="form-inputGroup">
+        <input v-model="user.email" placeholder="이메일 입력..." />
+        <input type="password" v-model="user.pwd" placeholder="비밀번호 입력..." />
+      </div>
+
+      <div class="form-buttonGroup">
+        <button class="logIn" @click="logIn">로그인</button>
+        <button class="register" @click="register">회원가입</button>
+      </div>
+
+      <div class="form-OauthGroup">
+        <div v-for="item in oauthList" :class="item.name" @click="registerWithProvider(item.name)">
+          <span><i class="icon" :class="item.icon" /></span>
+          Sign in with <strong>{{item.name}}</strong>
+        </div>
+      </div>
     </div>
   </section>
 </template>
@@ -20,9 +27,9 @@
 import firebase from '~helpers/firebase';
 
 const providers = {
-  Google: new firebase.auth.GoogleAuthProvider(),
-  Github: new firebase.auth.GithubAuthProvider(),
-  Facebook: new firebase.auth.FacebookAuthProvider(),
+  facebook: new firebase.auth.FacebookAuthProvider(),
+  google: new firebase.auth.GoogleAuthProvider(),
+  github: new firebase.auth.GithubAuthProvider(),
 };
 
 export default {
@@ -33,23 +40,28 @@ export default {
       pwd: '',
     },
     error: '',
+    oauthList: [
+      { name: 'facebook', icon: 'ion-social-facebook' },
+      { name: 'google', icon: 'ion-social-google' },
+      { name: 'github', icon: 'ion-social-github' },
+    ],
   }),
   methods: {
-    SignUp() {
-      const { email, password } = this.user;
-
-      firebase.auth().createUserWithEmailAndPassword(email, password).catch((error) => {
-        this.error = error;
-      });
-    },
-    SignIn() {
+    logIn() {
       const { email, pwd } = this.user;
 
       firebase.auth().signInWithEmailAndPassword(email, pwd).catch(() => {
         this.error = '아이디 혹은 비밀번호가 일치하지 않거나 존재하지 않는 계정입니다.';
       });
     },
-    SignInWithProvider(providerName) {
+    register() {
+      const { email, password } = this.user;
+
+      firebase.auth().createUserWithEmailAndPassword(email, password).catch((error) => {
+        this.error = error;
+      });
+    },
+    registerWithProvider(providerName) {
       firebase.auth().signInWithRedirect(providers[providerName]);
     },
   },
