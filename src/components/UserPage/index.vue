@@ -1,7 +1,9 @@
 <template>
   <section class="userPage">
-    <layout-header />
     UserPage
+    {{me}}
+
+    <button @click="signOut">logout</button>
 
     <router-view></router-view>
 
@@ -9,9 +11,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-
-import LayoutHeader from './Layout/Header';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'UserPage',
@@ -21,16 +21,10 @@ export default {
       'me',
     ]),
   },
-  watch: {
-    isAuthenticated(bools) {
-      if (!bools) this.$router.push({ name: 'LandingPage' });
-    },
-  },
-  created() {
-    if (!this.isAuthenticated) this.$router.push({ name: 'LandingPage' });
-  },
-  components: {
-    LayoutHeader,
+  methods: {
+    ...mapActions('auth', [
+      'signOut',
+    ]),
   },
 };
 </script>

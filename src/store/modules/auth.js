@@ -1,20 +1,30 @@
 import firebase from '~helpers/firebase';
-import store from '../../store';
 
-const database = firebase.database();
+import auth from '~helpers/api/auth';
+
+import store from '../../store';
+import router from '../../router';
 
 // auth observer
 firebase.auth().onAuthStateChanged((user) => {
-  store.dispatch('auth/updateAuth', user);
+  const thisPageNeedsAuth = router.currentRoute.meta.requiresAuth;
+  /*
+    After executing the store's action,
+    it redirects to the UserPage or AuthPage
+    according to the Promise returned and the meta attribute of the router
+  */
+  store.dispatch('auth/updateAuth', user).then(() => {
+    if (!thisPageNeedsAuth) router.push({ name: 'UserPage' });
+  }).catch(() => {
+    if (thisPageNeedsAuth) router.push({ name: 'AuthPage' });
+  });
 });
 
 export default {
   namespaced: true,
   state: {
-    isAuthenticated: false,
+    isAuthenticated: true,
     me: {},
-    success: {},
-    error: {},
   },
   getters: {
     getMyAuth(state) {
@@ -30,56 +40,50 @@ export default {
       state.isAuthenticated = false;
       state.me = {};
     },
-    UPDATE_AUTH_PROFILE_SUCCEED(state) {
-      state.success = {
-        ...state.success,
-        auth: '성공적으로 업데이트되었습니다',
-      };
-      state.error = {};
-    },
-    UPDATE_AUTH_PROFILE_FAILED(state, error) {
-      state.error = {
-        ...state.error,
-        auth: error,
-      };
-      state.success = {};
-    },
   },
   actions: {
     updateAuth({ commit }, user) {
-      if (user) {
-        /*
-          extract payload 'user' data
-          make data-structor 'userData'
-        */
-        const { providerData, uid, displayName, email, photoURL } = user;
-        const userData = {
-          displayName,
-          photoURL,
-          email: email || providerData[0].email,
-          providerInfo: providerData[0],
-        };
-        // user database from firebase
-        const userInDatabase = database.ref(`users/${uid}`);
-        // save userData to database
-        userInDatabase.set(userData);
-        // get userData from database (on 'value')
-        userInDatabase.on('value', (snapshot) => {
-          commit('UPDATE_AUTH', snapshot.val());
-        });
-      } else {
-        commit('UPDATE_AUTH_FAILED');
-      }
-    },
-    updateAuthProfile({ commit, dispatch }, userObj) {
-      const currentUser = firebase.auth().currentUser;
-
-      currentUser.updateProfile(userObj).then(() => {
-        dispatch('updateAuth', currentUser);
-        commit('UPDATE_AUTH_PROFILE_SUCCEED');
-      }, (error) => {
-        commit('UPDATE_AUTH_PROFILE_FAILED', error);
+      return new Promise((resolve, reject) => {
+        if (user) {
+          auth.setUser(user).then((userFromDatabase) => {
+            const userName = userFromDatabase.val().displayName;
+            commit('UPDATE_AUTH', userFromDatabase.val());
+            commit('messages/SUCCESS', `${userName}님 환영합니다!`, { root: true });
+            resolve();
+          });
+        } else {
+          commit('UPDATE_AUTH_FAILED');
+          reject();
+        }
       });
+    },
+    updateAuthProfile({ commit, dispatch }, user) {
+      // update Profile
+      auth.updateUser(user).then(() => {
+        // update auth state
+        auth.setUser(firebase.auth().currentUser).then((userFromDatabase) => {
+          commit('UPDATE_AUTH', userFromDatabase.val());
+          commit('messages/SUCCESS', '프로필이 업데이트 되었습니다', { root: true });
+        });
+      }, (error) => {
+        commit('messages/ERROR', error, { root: true });
+      });
+    },
+    signIn({ commit }, user) {
+      auth.signIn(user).catch(() => {
+        commit('messages/ERROR', '이메일 혹은 비밀번호가 일치하지 않거나 존재하지 않는 계정입니다.', { root: true });
+      });
+    },
+    signUp({ commit }, user) {
+      auth.signUp(user).catch(() => {
+        commit('messages/ERROR', '이메일 혹은 비밀번호가 일치하지 않거나 존재하지 않는 계정입니다.', { root: true });
+      });
+    },
+    signOut() {
+      auth.signOut();
+    },
+    signInWithProvider({ commit }, providerName) {
+      auth.signInWithProvider(providerName);
     },
   },
 };

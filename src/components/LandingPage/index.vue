@@ -18,14 +18,6 @@ export default {
       'isAuthenticated',
     ]),
   },
-  watch: {
-    isAuthenticated(bools) {
-      if (bools) this.$router.push({ name: 'UserPage' });
-    },
-  },
-  created() {
-    if (this.isAuthenticated) this.$router.push({ name: 'UserPage' });
-  },
   components: {
     LayoutHeader,
   },
