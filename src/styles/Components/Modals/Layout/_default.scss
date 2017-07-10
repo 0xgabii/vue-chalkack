@@ -1,0 +1,62 @@
+// transition css
+.modal-enter-active,
+.modal-leave-active{
+  transition: all 0.75s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+.modal-enter,
+.modal-leave-to {
+  opacity: 0;
+}
+.modal-enter .modal-wrapper,
+.modal-leave-to .modal-wrapper{
+  transform: translate(-50%, -50%) scale(1.2);
+}
+
+// template css
+.modal {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.3);
+
+  &-wrapper {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    min-width: 25rem;
+    padding: 1.2rem;
+    background-color: white;
+    border-radius: 3px;
+    transform: translate(-50%,-50%);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    transition: all 0.3s;
+  }
+
+  &-header {
+    position: relative;
+    padding: 0 0.5rem 1rem 0.5rem;
+    border-bottom: 1px solid lightgray;
+    font-size: 1.35rem;
+  }
+
+  .close {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    color: gray;
+    cursor: pointer;
+    transform: translateY(-70%);
+  }
+
+  &-content {
+    padding: 1rem;
+  }
+
+  &-footer {
+    padding: 1rem 0 0 0;
+    border-top: 1px solid lightgray;
+    text-align: right;
+  }
+}
