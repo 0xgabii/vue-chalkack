@@ -21,10 +21,8 @@ export default {
       'me',
     ]),
   },
-  methods: {
-    ...mapActions('auth', [
-      'signOut',
-    ]),
+  components: {
+    LayoutHeader,
   },
 };
 </script>
