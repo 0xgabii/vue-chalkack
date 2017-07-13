@@ -8,6 +8,10 @@ import store from './store';
 
 import router from './router';
 
+import Modal from './components/Modals/Layout/Default';
+
+Vue.component('modal', Modal);
+
 Vue.config.productionTip = false;
 
 /* eslint-disable no-new */
