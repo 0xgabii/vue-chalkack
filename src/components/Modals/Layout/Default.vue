@@ -1,7 +1,7 @@
 <template>
   <div class="modal">
     <div class="modal-wrapper">
-      <header class="modal-header" v-if="!name">
+      <header class="modal-header" v-if="name">
         <h3>{{ name }}</h3>        
         <span class="close" @click="handleClose"><i class="material-icons">close</i></span>
       </header>
@@ -18,7 +18,7 @@
 
 <script>
 export default {
-  name: 'photoupload',
+  name: 'Modal',
   props: {
     name: {
       type: String,
