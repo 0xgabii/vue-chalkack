@@ -14,7 +14,7 @@ const returnUserObj = ({
   photoURL,
   providerData,
 }) => ({
-  displayName: displayName || 'UnknownUser',
+  displayName,
   photoURL,
   email: email || providerData[0].email,
   providerInfo: providerData[0],
