@@ -1,9 +1,21 @@
 <template>
   <modal 
     v-if="!me.displayName"
-    name="당신의 이름은 무엇인가요?"
-    @submit="updateName">
-    <input v-model="displayName" />
+    class="firstTimeUser"
+    title="What is your name?"
+    subtitle="I want to know about you">
+
+    <div class="inputBox">
+      <label class="inputBox__guideText">My name is</label>
+      <input 
+        class="inputBox__typeText" 
+        v-model="displayName" />
+    </div>
+
+    <template slot="footer">
+      <button class="submit" @click="updateName">Remember that</button>
+    </template>
+
   </modal>  
 </template>
 
