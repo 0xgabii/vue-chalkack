@@ -1,16 +1,18 @@
 <template>
   <div class="modal">
     <div class="modal-wrapper">
-      <header class="modal-header" v-if="name">
-        <h3>{{ name }}</h3>        
-        <span class="close" @click="handleClose"><i class="material-icons">close</i></span>
+      <header class="modal-header">
+        <h3 class="modal-header__title">{{ title }}</h3>
+        <p class="modal-header__subtitle">{{ subtitle }}</p>
       </header>
       <section class="modal-content">                
         <slot />
       </section>
       <footer class="modal-footer">
-        <button class="closeBtn" @click="handleClose">Cancel</button>
-        <button class="submitBtn" @click="handleSubmit">Submit</button>
+        <slot name="footer">
+          <button class="close" @click="handleClose">Submit</button>
+          <button class="submit" @click="handleSubmit">Submit</button>
+        </slot>
       </footer>
     </div>
   </div>
@@ -20,9 +22,11 @@
 export default {
   name: 'Modal',
   props: {
-    name: {
+    title: {
       type: String,
-      required: false,
+    },
+    subtitle: {
+      type: String,
     },
   },
   methods: {
