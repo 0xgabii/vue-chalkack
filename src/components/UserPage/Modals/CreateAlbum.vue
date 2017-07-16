@@ -26,7 +26,8 @@
 </template>
 
 <script>
-// import { mapActions } from 'vuex';
+import { mapState } from 'vuex';
+import albums from '~helpers/api/albums';
 
 export default {
   name: 'CreateAlbumModal',
@@ -34,9 +35,20 @@ export default {
     name: '',
     tags: '',
   }),
+  computed: {
+    ...mapState('auth', [
+      'me',
+    ]),
+  },
   methods: {
     createAlbum() {
+      const { name, tags, me } = this;
 
+      albums.create({
+        name,
+        tags: tags.split(','),
+        user: me.id,
+      });
     },
   },
 };
