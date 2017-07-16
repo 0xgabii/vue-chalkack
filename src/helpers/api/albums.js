@@ -6,12 +6,12 @@ export default {
   /*
     @{name: String}
     @{tags: Array}
-    @{uid: Number}: user id
+    @{user: Number}: user id
   */
   create({
     name,
     tags,
-    uid: owner,
+    user: owner,
   }) {
     database.ref('albums').push({
       name,
