@@ -9,11 +9,13 @@ const providers = {
 };
 
 const returnUserObj = ({
+  uid,
   displayName,
   email,
   photoURL,
   providerData,
 }) => ({
+  id: uid,
   displayName,
   photoURL,
   email: email || providerData[0].email,
