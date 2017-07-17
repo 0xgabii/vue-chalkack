@@ -2,6 +2,10 @@
 
 > 온라인 사진 갤러리
 
+## 진행사항 & 기록
+
+[Trello](https://trello.com/b/oHdIpTg3/develop-chalkack)
+
 ## Tech Stacks
 
 - Vue
