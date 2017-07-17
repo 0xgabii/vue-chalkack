@@ -12,9 +12,10 @@ import store from './store';
 
 import router from './router';
 
-import Modal from './components/Modals/Layout/Default';
+// install global components
+import install from '~helpers/globalComponents';
 
-Vue.component('modal', Modal);
+install();
 
 Vue.config.productionTip = false;
 
