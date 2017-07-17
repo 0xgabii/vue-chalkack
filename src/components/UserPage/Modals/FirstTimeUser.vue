@@ -5,12 +5,7 @@
     title="What is your name?"
     subtitle="I want to know about you">
 
-    <div class="inputBox">
-      <label class="inputBox__guideText">My name is</label>
-      <input 
-        class="inputBox__typeText" 
-        v-model="displayName" />
-    </div>
+    <text-input label="My name is" v-model="displayName" />
 
     <template slot="footer">
       <button class="submit" @click="updateName">Remember that</button>
