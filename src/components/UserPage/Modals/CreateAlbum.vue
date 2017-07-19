@@ -30,6 +30,12 @@ export default {
       'me',
     ]),
   },
+  watch: {
+    // generate tags from name
+    name(newName) {
+      this.tags = newName.split(' ');
+    },
+  },
   methods: {
     createAlbum() {
       const { name, tags, me } = this;
