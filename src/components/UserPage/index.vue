@@ -8,8 +8,8 @@
     <router-view></router-view>
   
     <!-- modal area -->
-    <first-time-user-modal />
-    <create-album-modal />
+    <first-time-user-modal v-if="!me.displayName" />
+    <create-album-modal v-if="modals.createAlbum" />
 
   </section>
 </template>
@@ -25,6 +25,9 @@ export default {
   computed: {
     ...mapState('auth', [
       'me',
+    ]),
+    ...mapState('modals', [
+      'modals',
     ]),
   },
   methods: {

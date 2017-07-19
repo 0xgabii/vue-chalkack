@@ -1,7 +1,5 @@
 <template>
   <modal 
-    v-if="!me.displayName"
-    class="firstTimeUser"
     title="What is your name?"
     subtitle="I want to know about you">
 

@@ -1,14 +1,14 @@
 <template>
-  <modal 
-    class="createAlbum"
-    title="Create Your Album">
+  <modal
+    title="Create Your Album"
+    @close="closeModal('createAlbum')">
 
     <text-input label="Name" v-model="name" />
 
     <tags-input label="Tags" v-model="tags" />
 
     <template slot="footer">
-      <button class="cancel">Cancel</button>
+      <button class="cancel" @click="closeModal('createAlbum')">Cancel</button>
       <button class="submit" @click="createAlbum">Create</button>
     </template>
 
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import albums from '~helpers/api/albums';
 
 export default {
@@ -37,6 +37,9 @@ export default {
     },
   },
   methods: {
+    ...mapActions('modals', [
+      'closeModal',
+    ]),
     createAlbum() {
       const { name, tags, me } = this;
 
