@@ -1,15 +1,16 @@
 <template>
-  <div class="inputBox">
-    <label class="inputBox__guideText">{{label}}</label>
+  <input-wrapper :label="label">
     <input
-      class="inputBox__typeArea" 
+      class="textInput" 
       :value="value"
       :readonly="readOnly"
-      @input="updateValue($event.target.value)" /> 
-  </div>
+      @input="updateValue($event.target.value)" />
+  </input-wrapper>
 </template>
 
 <script>
+import InputWrapper from './InputWrapper';
+
 export default {
   name: 'TextInput',
   props: {
@@ -28,6 +29,9 @@ export default {
     updateValue(value) {
       this.$emit('input', value);
     },
+  },
+  components: {
+    InputWrapper,
   },
 };
 </script>

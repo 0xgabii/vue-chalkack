@@ -1,22 +1,22 @@
 <template>
-  <div class="inputBox">
-    <label class="inputBox__guideText">{{label}}</label>
+  <input-wrapper :label="label">
     <div class="tagsInput">
-      <div class="tagsInput-list">
-        <span v-for="(item, index) in tags" @click="removeTag(index)">
-          {{item}}
-        </span>
+      <div class="tagsInput__tag" v-for="(item, index) in tags" @click="removeTag(index)" >
+        <span>{{item}}</span>
+        <i class="ion-android-close" />
       </div>
       <input
         class="tagsInput__typeTag" 
         v-model="input" 
         @keydown.enter="addTag" 
         @keydown.tab.prevent="addTag" />
-    </div> 
-  </div>
+    </div>
+  </input-wrapper>
 </template>
 
 <script>
+import InputWrapper from './InputWrapper';
+
 export default {
   name: 'TagsInput',
   props: {
@@ -35,6 +35,11 @@ export default {
     input: '',
     tags: [],
   }),
+  watch: {
+    value(array) {
+      this.tags = array;
+    },
+  },
   methods: {
     addTag() {
       const { input, tags, max } = this;
@@ -58,6 +63,9 @@ export default {
         ...this.value,
       ];
     }
+  },
+  components: {
+    InputWrapper,
   },
 };
 </script>
