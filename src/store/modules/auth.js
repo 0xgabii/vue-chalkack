@@ -7,7 +7,7 @@ import router from '../../router';
 
 // auth observer
 firebase.auth().onAuthStateChanged((user) => {
-  const thisPageNeedsAuth = router.currentRoute.meta.requiresAuth;
+  const thisPageNeedsAuth = router.currentRoute.matched[0].meta.requiresAuth;
   /*
     After executing the store's action,
     it redirects to the UserPage or AuthPage
