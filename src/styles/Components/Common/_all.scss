@@ -1,0 +1,14 @@
+.inputBox {
+  display: flex;
+  flex-direction: column;
+
+  margin: 0.75rem 0 0.5rem 0;
+
+  &__guideText {
+    padding: 0.3rem 0;
+    font-size: 1.05rem;
+  }
+
+  @import 'text';
+  @import 'tags';
+}

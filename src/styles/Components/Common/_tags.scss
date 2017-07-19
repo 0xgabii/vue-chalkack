@@ -1,0 +1,32 @@
+.tagsInput {
+  margin-top: 0.3rem;
+  padding: 0 0.3rem;
+  border-bottom: 1px solid #9e9e9e;
+
+  &__tag {
+    display: inline-block;
+
+    margin: 0 0.3rem 0.3rem 0;
+    padding: 0.3rem 0.5rem 0.2rem;
+
+    background-color: gray;
+    color: white;
+    cursor: pointer;
+    font-size: 0.85rem;
+
+    transform: skewX(-10deg);
+
+    span {
+      display: inline-block;
+      transform: skewX(10deg);
+    }
+  }
+
+  &__typeTag {
+    padding: 0.3rem 0;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+  }
+}
