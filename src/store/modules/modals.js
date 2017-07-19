@@ -2,7 +2,7 @@ export default {
   namespaced: true,
   state: {
     modals: {
-      createAlbum: true,
+      createAlbum: false,
     },
   },
   mutations: {
