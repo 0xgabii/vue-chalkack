@@ -1,0 +1,45 @@
+.album {
+  display: inline-block;
+  margin: 0.5rem 1rem;
+
+  border-radius: 0.3rem;
+  background-color: #e8edf3;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+
+  &__cover {
+
+    img {
+      width: 25rem;
+      height: 12rem;
+    }
+  }
+
+  &-introduce {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 1rem 1.3rem;
+    background-color: white;
+
+    &__name {
+      font-size: 1.2rem;
+    }
+
+    &__tag {
+      display: inline-block;
+
+      margin: 0.7rem 0.3rem 0 0;
+      padding: 0.3rem 0.5rem;
+
+      background-color: gray;
+      color: white;
+      font-size: 0.85rem;
+    }
+
+    &__favorite {
+      font-size: 1.5rem;
+    }
+  }
+}
