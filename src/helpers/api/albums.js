@@ -3,6 +3,12 @@ import firebase from '../firebase';
 const database = firebase.database();
 
 export default {
+  get(id) {
+    return database.ref(`albums/${id}`);
+  },
+  getList() {
+    return database.ref('albums');
+  },
   /*
     @{name: String}
     @{tags: Array}
