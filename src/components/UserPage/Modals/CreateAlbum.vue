@@ -16,20 +16,20 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapActions } from 'vuex';
 import albums from '~helpers/api/albums';
 
 export default {
   name: 'CreateAlbumModal',
+  props: {
+    data: {
+      type: Object,
+    },
+  },
   data: () => ({
     name: '',
     tags: [],
   }),
-  computed: {
-    ...mapState('auth', [
-      'me',
-    ]),
-  },
   watch: {
     // generate tags from name
     name(newName) {
@@ -41,12 +41,12 @@ export default {
       'closeModal',
     ]),
     createAlbum() {
-      const { name, tags, me } = this;
+      const { name, tags, data } = this;
 
       albums.create({
         name,
         tags,
-        user: me.id,
+        user: data.user,
       });
     },
   },

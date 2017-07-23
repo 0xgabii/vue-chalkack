@@ -9,7 +9,14 @@
   
     <!-- modal area -->
     <first-time-user-modal v-if="firstTime" />
-    <create-album-modal v-if="modals.createAlbum" />
+    <create-album-modal 
+      v-if="createAlbum || createAlbum.visible"
+      :data="createAlbum.data"
+    />
+    <upload-photo-modal 
+      v-if="uploadPhoto || uploadPhoto.visible"
+      :data="uploadPhoto.data"
+    />
 
   </section>
 </template>
@@ -19,6 +26,7 @@ import { mapState, mapActions } from 'vuex';
 
 import FirstTimeUser from './Modals/FirstTimeUser';
 import CreateAlbum from './Modals/CreateAlbum';
+import UploadPhoto from './Modals/UploadPhoto';
 
 export default {
   name: 'UserPage',
@@ -27,7 +35,8 @@ export default {
       'me',
     ]),
     ...mapState('modals', [
-      'modals',
+      'createAlbum',
+      'uploadPhoto',
     ]),
     firstTime() {
       if (Object.keys(this.me).length && !this.me.id) {
@@ -44,6 +53,7 @@ export default {
   components: {
     FirstTimeUserModal: FirstTimeUser,
     CreateAlbumModal: CreateAlbum,
+    UploadPhotoModal: UploadPhoto,
   },
 };
 </script>

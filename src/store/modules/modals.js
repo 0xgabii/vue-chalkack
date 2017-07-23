@@ -5,16 +5,23 @@ export default {
     uploadPhoto: false,
   },
   mutations: {
-    OPEN_MODAL(state, name) {
-      state[name] = true;
+    OPEN_MODAL(state, modal) {
+      if (modal.constructor === Object) {
+        state[modal.name] = {
+          visible: true,
+          data: modal.data,
+        };
+      } else {
+        state[modal] = true;
+      }
     },
     CLOSE_MODAL(state, name) {
       state[name] = false;
     },
   },
   actions: {
-    openModal({ commit }, name) {
-      commit('OPEN_MODAL', name);
+    openModal({ commit }, modal) {
+      commit('OPEN_MODAL', modal);
     },
     closeModal({ commit }, name) {
       commit('CLOSE_MODAL', name);
