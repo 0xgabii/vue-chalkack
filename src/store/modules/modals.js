@@ -1,16 +1,15 @@
 export default {
   namespaced: true,
   state: {
-    modals: {
-      createAlbum: false,
-    },
+    createAlbum: false,
+    uploadPhoto: false,
   },
   mutations: {
     OPEN_MODAL(state, name) {
-      state.modals[name] = true;
+      state[name] = true;
     },
     CLOSE_MODAL(state, name) {
-      state.modals[name] = false;
+      state[name] = false;
     },
   },
   actions: {
