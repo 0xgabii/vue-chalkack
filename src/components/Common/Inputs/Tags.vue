@@ -1,10 +1,10 @@
 <template>
   <input-wrapper :label="label">
     <div class="tagsInput">
-      <div class="tagsInput__tag" v-for="(item, index) in tags" @click="removeTag(index)" >
-        <span>{{item}}</span>
+      <span class="tagsInput__tag" v-for="(item, index) in tags" @click="removeTag(index)" >
+        {{item}}
         <i class="ion-android-close" />
-      </div>
+      </span>
       <input
         class="tagsInput__typeTag" 
         v-model="input" 

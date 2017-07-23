@@ -13,13 +13,6 @@
     color: white;
     cursor: pointer;
     font-size: 0.85rem;
-
-    transform: skewX(-10deg);
-
-    span {
-      display: inline-block;
-      transform: skewX(10deg);
-    }
   }
 
   &__typeTag {
