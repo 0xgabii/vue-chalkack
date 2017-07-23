@@ -2,6 +2,10 @@
   <section>
     <button @click="openUploadPhoto">Upload</button>
     {{ album }}
+
+    <div class="dd" v-for="item in photos">
+      <img :src="item.src" />
+    </div>
   </section>
 </template>
 
@@ -9,11 +13,13 @@
 import { mapState, mapActions } from 'vuex';
 
 import albums from '~helpers/api/albums';
+import photos from '~helpers/api/photos';
 
 export default {
   name: 'AlbumPage',
   data: () => ({
     album: {},
+    photos: [],
   }),
   computed: {
     ...mapState('auth', [
@@ -34,15 +40,27 @@ export default {
         albums.getList().orderByChild('owner').equalTo(this.me.id).on('value', (snapshot) => {
           this.getAlbum(snapshot.val());
         });
+        photos.getList().orderByChild('owner').equalTo(this.me.id).on('value', (snapshot) => {
+          this.getPhotos(snapshot.val());
+        });
       }
     },
     getAlbum(list) {
       const { albumName } = this.$route.params;
 
       Object.keys(list).forEach((key) => {
-        if (list[key].name === albumName) {
-          this.album = { key, ...list[key] };
+        const item = list[key];
+
+        if (item.name === albumName) {
+          this.album = { key, ...item };
         }
+      });
+    },
+    getPhotos(list) {
+      Object.keys(list).forEach((key) => {
+        const item = list[key];
+
+        this.photos.push(item);
       });
     },
     openUploadPhoto() {
