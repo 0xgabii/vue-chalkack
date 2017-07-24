@@ -60,7 +60,9 @@ export default {
       Object.keys(list).forEach((key) => {
         const item = list[key];
 
-        this.photos.push(item);
+        if (item.album === this.album.key) {
+          this.photos.push(item);
+        }
       });
     },
     openUploadPhoto() {
