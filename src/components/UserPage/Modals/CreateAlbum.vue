@@ -1,14 +1,14 @@
 <template>
   <modal
     title="Create Your Album"
-    @close="closeModal('createAlbum')">
+    @close="handleClose">
 
     <text-input label="Name" v-model="name" />
 
     <tags-input label="Tags" v-model="tags" />
 
     <template slot="footer">
-      <button class="cancel" @click="closeModal('createAlbum')">Cancel</button>
+      <button class="cancel" @click="handleClose">Cancel</button>
       <button class="submit" @click="createAlbum">Create</button>
     </template>
 
@@ -16,15 +16,12 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
 import albums from '~helpers/api/albums';
 
 export default {
   name: 'CreateAlbumModal',
   props: {
-    data: {
-      type: Object,
-    },
+    user: String,
   },
   data: () => ({
     name: '',
@@ -37,16 +34,16 @@ export default {
     },
   },
   methods: {
-    ...mapActions('modals', [
-      'closeModal',
-    ]),
+    handleClose() {
+      this.$router.replace({ name: 'UserPage' });
+    },
     createAlbum() {
-      const { name, tags, data } = this;
+      const { name, tags, user } = this;
 
       albums.create({
         name,
         tags,
-        user: data.user,
+        user,
       });
     },
   },

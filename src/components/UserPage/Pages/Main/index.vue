@@ -9,12 +9,13 @@
         :data="item"
       />
     </router-link>
-
+    
+    <router-view v-bind="modalProps"></router-view>
   </div>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState } from 'vuex';
 
 import albums from '~helpers/api/albums';
 
@@ -29,6 +30,17 @@ export default {
     ...mapState('auth', [
       'me',
     ]),
+    modalProps() {
+      const { name } = this.$route;
+
+      if (name === 'CreateAlbum') {
+        return {
+          user: this.me.id,
+        };
+      }
+
+      return {};
+    },
   },
   watch: {
     me() {
@@ -36,9 +48,6 @@ export default {
     },
   },
   methods: {
-    ...mapActions('modals', [
-      'openModal',
-    ]),
     listener() {
       if (this.me && this.me.id) {
         albums.getList().orderByChild('owner').equalTo(this.me.id).on('value', (snapshot) => {
@@ -50,12 +59,7 @@ export default {
       this.albums = list;
     },
     openCreateAlbum() {
-      this.openModal({
-        name: 'createAlbum',
-        data: {
-          user: this.me.id,
-        },
-      });
+      this.$router.push({ name: 'CreateAlbum' });
     },
   },
   created() {

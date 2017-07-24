@@ -6,11 +6,13 @@
     <div class="dd" v-for="item in photos">
       <img :src="item.src" />
     </div>
+
+    <router-view v-bind="modalProps"></router-view>
   </section>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState } from 'vuex';
 
 import albums from '~helpers/api/albums';
 import photos from '~helpers/api/photos';
@@ -25,6 +27,18 @@ export default {
     ...mapState('auth', [
       'me',
     ]),
+    modalProps() {
+      const { name } = this.$route;
+
+      if (name === 'UploadPhoto') {
+        return {
+          album: this.album.key,
+          user: this.me.id,
+        };
+      }
+
+      return {};
+    },
   },
   watch: {
     me() {
@@ -32,9 +46,6 @@ export default {
     },
   },
   methods: {
-    ...mapActions('modals', [
-      'openModal',
-    ]),
     listener() {
       if (this.me && this.me.id) {
         albums.getList().orderByChild('owner').equalTo(this.me.id).on('value', (snapshot) => {
@@ -66,13 +77,7 @@ export default {
       });
     },
     openUploadPhoto() {
-      this.openModal({
-        name: 'uploadPhoto',
-        data: {
-          album: this.album.key,
-          user: this.me.id,
-        },
-      });
+      this.$router.push({ name: 'UploadPhoto' });
     },
   },
   created() {

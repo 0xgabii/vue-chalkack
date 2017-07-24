@@ -8,14 +8,9 @@
     <router-view></router-view>
   
     <!-- modal area -->
-    <first-time-user-modal v-if="firstTime" />
-    <create-album-modal 
-      v-if="createAlbum || createAlbum.visible"
-      :data="createAlbum.data"
-    />
-    <upload-photo-modal 
-      v-if="uploadPhoto || uploadPhoto.visible"
-      :data="uploadPhoto.data"
+    <first-time-user-modal 
+      v-if="firstTime" 
+      :user="me" 
     />
 
   </section>
@@ -25,18 +20,12 @@
 import { mapState, mapActions } from 'vuex';
 
 import FirstTimeUser from './Modals/FirstTimeUser';
-import CreateAlbum from './Modals/CreateAlbum';
-import UploadPhoto from './Modals/UploadPhoto';
 
 export default {
   name: 'UserPage',
   computed: {
     ...mapState('auth', [
       'me',
-    ]),
-    ...mapState('modals', [
-      'createAlbum',
-      'uploadPhoto',
     ]),
     firstTime() {
       if (Object.keys(this.me).length && !this.me.id) {
@@ -52,8 +41,6 @@ export default {
   },
   components: {
     FirstTimeUserModal: FirstTimeUser,
-    CreateAlbumModal: CreateAlbum,
-    UploadPhotoModal: UploadPhoto,
   },
 };
 </script>

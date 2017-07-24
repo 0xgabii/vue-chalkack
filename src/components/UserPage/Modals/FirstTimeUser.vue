@@ -13,25 +13,23 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'FirstTimeUserModal',
+  props: {
+    user: Object,
+  },
   data: () => ({
     displayName: '',
   }),
-  computed: {
-    ...mapState('auth', [
-      'me',
-    ]),
-  },
   methods: {
     ...mapActions('auth', [
       'updateAuthProfile',
     ]),
     updateName() {
       this.updateAuthProfile({
-        ...this.me,
+        ...this.user,
         displayName: this.displayName,
       });
     },

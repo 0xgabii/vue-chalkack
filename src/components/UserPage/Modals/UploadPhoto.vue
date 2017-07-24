@@ -1,7 +1,7 @@
 <template>
   <modal
     title="Upload Your Photos"
-    @close="closeModal('uploadPhoto')">
+    @close="handleClose">
 
     <div class="dropzone">
       <input 
@@ -22,7 +22,7 @@
     </div>
 
     <template slot="footer">
-      <button class="cancel" @click="closeModal('uploadPhoto')">Cancel</button>
+      <button class="cancel" @click="handleClose">Cancel</button>
       <button class="submit" @click="uploadPhotos">Add to album</button>
     </template>
 
@@ -30,8 +30,6 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-
 import ColorThief from 'color-thief-standalone';
 
 const colorThief = new ColorThief();
@@ -59,17 +57,17 @@ const isFileImage = (fileName) => {
 export default {
   name: 'UploadPhotoModal',
   props: {
-    data: {
-      type: Object,
-    },
+    album: String,
+    user: String,
   },
   data: () => ({
     photos: [],
   }),
   methods: {
-    ...mapActions('modals', [
-      'closeModal',
-    ]),
+    handleClose() {
+      const { albumName } = this.$route.params;
+      this.$router.replace({ name: 'AlbumPage', params: { albumName } });
+    },
     handleFileChange(e) {
       const { files } = e.target;
 
@@ -126,7 +124,7 @@ export default {
       color,
       url: src,
     }) {
-      const { user, album } = this.data;
+      const { user, album } = this;
 
       photos.create({
         name,
