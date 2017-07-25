@@ -1,0 +1,78 @@
+.uploadPhoto {
+
+  .modal-wrapper {
+    width: 32rem;
+  }
+
+  .dropzone {
+    position: relative;
+    height: 12rem;
+
+    &__uploader,
+    &-description {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+    }
+
+    &__uploader {
+      width: 100%;
+      outline: none;
+      cursor: pointer;
+      opacity: 0;
+    }
+
+    &-description {
+      background-color: lightblue;
+      text-align: center;
+      cursor: pointer;
+      pointer-events: none;
+
+      i {
+        position: absolute;
+        left: 50%;
+        top: 40%;
+        font-size: 3rem;
+        transform: translate(-50%, -50%);
+      }
+
+      h3 {
+        position: absolute;
+        left: 50%;
+        top: 60%;
+        width: 100%;
+        font-size: 1.2rem;
+        transform: translate(-50%, -50%);
+      }
+    }
+  }
+
+  .upload {
+
+    &-preview {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      padding: 0.5rem 0;
+
+      &__thumbnail {
+        max-height: 3rem;
+        margin-right: 1rem;
+      }
+      
+      &__name {
+        flex: 1;
+
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      &__progress {
+
+      }
+    }
+  }
+}

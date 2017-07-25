@@ -1,5 +1,6 @@
 <template>
   <modal
+    class="uploadPhoto"
     title="Upload Your Photos"
     @close="handleClose">
 
@@ -18,7 +19,15 @@
     </div>
 
     <div class="upload">
-
+      <div class="upload-preview" v-for="item in photos">
+        <img class="upload-preview__thumbnail" :src="item.thumbnail" />
+        <p class="upload-preview__name">
+          {{item.name}}
+        </p>
+        <div class="upload-preview__progress">
+          {{item.size}}
+        </div>
+      </div>
     </div>
 
     <template slot="footer">
