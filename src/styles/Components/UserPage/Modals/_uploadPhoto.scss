@@ -1,12 +1,14 @@
 .uploadPhoto {
 
   .modal-wrapper {
-    width: 32rem;
+    width: 35rem;
   }
 
   .dropzone {
     position: relative;
-    height: 12rem;
+    height: 15rem;
+
+    border: 5px dashed gray;
 
     &__uploader,
     &-description {
@@ -25,7 +27,6 @@
     }
 
     &-description {
-      background-color: lightblue;
       text-align: center;
       cursor: pointer;
       pointer-events: none;
@@ -50,6 +51,17 @@
   }
 
   .upload {
+    margin-top: 1.5rem;
+
+    &-body {
+      max-height: 15rem;
+    }
+
+    // fix blurry bugs
+    .ps__scrollbar-x-rail,
+    .ps__scrollbar-y-rail {
+      transition: background-color .2s linear,height .2s linear,width .2s ease-in-out,border-radius .2s ease-in-out;
+    }
 
     &-preview {
       display: flex;
@@ -59,19 +71,21 @@
       padding: 0.5rem 0;
 
       &__thumbnail {
-        max-height: 3rem;
+        width: 5rem;
         margin-right: 1rem;
       }
       
       &__name {
-        flex: 1;
+        flex:1;
 
-        white-space: nowrap;
+        line-height: 1.5;
+        overflow: hidden;
         text-overflow: ellipsis;
+        white-space: nowrap;
       }
 
       &__progress {
-
+        margin-left: 1rem;
       }
     }
   }

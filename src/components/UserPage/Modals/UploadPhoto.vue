@@ -18,16 +18,29 @@
       </div>
     </div>
 
-    <div class="upload">
-      <div class="upload-preview" v-for="item in photos">
-        <img class="upload-preview__thumbnail" :src="item.thumbnail" />
-        <p class="upload-preview__name">
-          {{item.name}}
-        </p>
-        <div class="upload-preview__progress">
-          {{item.size}}
-        </div>
+    <div class="upload" v-if="photos.length">
+
+      <div class="upload-preview">
+        <p class="upload-preview__thumbnail">Thumbnail</p>
+        <p class="upload-preview__name">File</p>
+        <p class="upload-preview__progress">Progress</p>
       </div>
+
+      <scroll class="upload-body" :settings="{ suppressScrollX: true }">
+        <div class="upload-preview" v-for="item in photos">
+
+          <img class="upload-preview__thumbnail" :src="item.thumbnail" />
+
+          <p class="upload-preview__name">
+            {{item.name}}
+          </p>
+
+          <div class="upload-preview__progress">
+            {{item.size}}
+          </div>
+
+        </div>
+      </scroll>
     </div>
 
     <template slot="footer">
