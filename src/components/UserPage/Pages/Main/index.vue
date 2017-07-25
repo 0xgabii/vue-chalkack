@@ -19,7 +19,7 @@ import { mapState } from 'vuex';
 
 import albums from '~helpers/api/albums';
 
-import Album from '../Common/Album';
+import Album from '../../Common/Album';
 
 export default {
   name: 'MainPage',
