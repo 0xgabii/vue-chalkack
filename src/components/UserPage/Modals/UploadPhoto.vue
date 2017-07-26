@@ -36,7 +36,7 @@
           </p>
 
           <div class="upload-preview__progress">
-            {{item.size}}
+            {{byteToText(item.size)}}
           </div>
 
         </div>
@@ -90,6 +90,18 @@ export default {
       const { albumName } = this.$route.params;
       this.$router.replace({ name: 'AlbumPage', params: { albumName } });
     },
+
+    byteToText(byte) {
+      const kb = Math.round(byte / 1024);
+      const mb = Math.round(kb / 1024);
+
+      if (kb < 1024) {
+        return `${kb} KB`;
+      }
+
+      return `${mb} MB`;
+    },
+
     handleFileChange(e) {
       const { files } = e.target;
 
