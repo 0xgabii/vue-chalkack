@@ -68,6 +68,9 @@ export default {
       });
     },
     getPhotos(list) {
+      // reset state
+      this.photos = [];
+      // find photos by album key
       Object.keys(list).forEach((key) => {
         const item = list[key];
 
