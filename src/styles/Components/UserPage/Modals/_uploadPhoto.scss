@@ -7,7 +7,7 @@
   .dropzone {
     position: relative;
     width: 20rem;
-    height: 18rem;
+    height: 20rem;
 
     margin: 1rem;
 
@@ -64,13 +64,7 @@
 
     &-body {
       padding: 0 1rem 0 0.5rem;
-      max-height: 16rem;
-    }
-
-    // fix blurry bugs
-    .ps__scrollbar-x-rail,
-    .ps__scrollbar-y-rail {
-      transition: background-color .2s linear,height .2s linear,width .2s ease-in-out,border-radius .2s ease-in-out;
+      max-height: 19rem;
     }
 
     &-preview {
@@ -102,7 +96,7 @@
 
         span {
           flex: 1;
-
+          
           overflow: hidden;
           line-height: 1.5;
           text-overflow: ellipsis;
@@ -124,10 +118,11 @@
 
         span {
           display: block;
-          width: 30%;
+          width: 0%;
           height: 100%;
           background-color: #3ab6fb;
           border-radius: 1rem;
+          transition: width 0.2s;
         }
       }
 
@@ -135,6 +130,11 @@
         display: flex;
         justify-content: space-between;
       }
+    }
+    // fix blurry bugs
+    .ps__scrollbar-y-rail {
+      opacity: 1;
+      transition: none;
     }
   }
 }

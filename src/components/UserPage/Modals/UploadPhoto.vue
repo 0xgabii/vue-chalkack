@@ -18,19 +18,19 @@
       </div>
     </div>
 
-    <div class="upload">
-      <h3 class="upload__status">Uploading</h3>
-      
+    <div class="upload" v-if="photos.length">
+      <h3 class="upload__status">{{uploadText}}</h3>
+
       <scroll class="upload-body" :settings="{ suppressScrollX: true }">
 
-        <figure class="upload-preview" v-if="photos.length" v-for="item in photos">
+        <figure class="upload-preview" v-for="(item, index) in photos">
 
           <img class="upload-preview__thumbnail" :src="item.thumbnail" />
 
           <figcaption>
             <div class="upload-preview__name">
               <span>{{item.name}}</span>
-              <i class="ion-close-round" />
+              <i class="ion-close-round" @click="removeUpload(index)" />
             </div>
 
             <div class="upload-preview__progress">
@@ -38,23 +38,20 @@
             </div>
 
             <div class="upload-preview__size">
-              <span>{{ item.progress === 100 ? 'Completed' : `${item.progress}% done` }}</span>
+              <span>{{progressToText(item.progress)}}</span>
               <span>{{byteToText(item.size)}}</span>
             </div>
           </figcaption>
 
         </figure>
 
-        <div class="upload__placeholder" v-if="!photos.length">
-          Nothing is Uploading
-        </div>
-
       </scroll>
+
     </div>
 
     <template slot="footer">
       <button class="cancel" @click="handleClose">Cancel</button>
-      <button class="submit" @click="uploadPhotos">Add to album</button>
+      <button class="submit" @click="uploadPhotos">Add photos to album</button>
     </template>
 
   </modal>  
@@ -94,6 +91,21 @@ export default {
   data: () => ({
     photos: [],
   }),
+  computed: {
+    uploadText() {
+      const { photos: p } = this;
+      const uploadProgress = p.filter(item => item.progress > 0 && item.progress <= 100).length;
+      const uploadComplete = p.filter(item => item.progress === 100).length;
+
+      if (uploadComplete === p.length) {
+        return 'Upload complete!';
+      } else if (uploadProgress) {
+        return `${uploadComplete}Photos uploaded`;
+      }
+
+      return 'Wait for upload';
+    },
+  },
   methods: {
     handleClose() {
       const { albumName } = this.$route.params;
@@ -109,6 +121,20 @@ export default {
       }
 
       return `${mb} mb`;
+    },
+
+    progressToText(percent) {
+      if (percent === 100) {
+        return 'Completed';
+      } else if (percent > 0 && percent < 100) {
+        return `${percent}% done`;
+      }
+
+      return 'Not started yet';
+    },
+
+    removeUpload(index) {
+      this.photos.splice(index, 1);
     },
 
     handleFileChange(e) {
