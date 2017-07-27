@@ -18,28 +18,35 @@
       </div>
     </div>
 
-    <div class="upload" v-if="photos.length">
-
-      <div class="upload-preview">
-        <p class="upload-preview__thumbnail">Thumbnail</p>
-        <p class="upload-preview__name">File</p>
-        <p class="upload-preview__progress">Progress</p>
-      </div>
-
+    <div class="upload">
+      <h3 class="upload__status">Uploading</h3>
+      
       <scroll class="upload-body" :settings="{ suppressScrollX: true }">
-        <div class="upload-preview" v-for="item in photos">
+
+        <figure class="upload-preview" v-if="photos.length" v-for="item in photos">
 
           <img class="upload-preview__thumbnail" :src="item.thumbnail" />
 
-          <p class="upload-preview__name">
-            {{item.name}}
-          </p>
+          <figcaption>
+            <div class="upload-preview__name">
+              <span>{{item.name}}</span>
+              <i class="ion-close-round" />
+            </div>
 
-          <div class="upload-preview__progress">
-            {{byteToText(item.size)}}
-          </div>
+            <div class="upload-preview__progress"><span /></div>
 
+            <div class="upload-preview__size">
+              <span>33% done | Completed</span>
+              <span>{{byteToText(item.size)}}</span>
+            </div>
+          </figcaption>
+
+        </figure>
+
+        <div class="upload__placeholder" v-if="!photos.length">
+          Nothing is Uploading
         </div>
+
       </scroll>
     </div>
 
@@ -96,10 +103,10 @@ export default {
       const mb = (kb / 1024).toFixed(1);
 
       if (kb < 1024) {
-        return `${kb} KB`;
+        return `${kb} kb`;
       }
 
-      return `${mb} MB`;
+      return `${mb} mb`;
     },
 
     handleFileChange(e) {
