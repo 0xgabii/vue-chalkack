@@ -33,10 +33,12 @@
               <i class="ion-close-round" />
             </div>
 
-            <div class="upload-preview__progress"><span /></div>
+            <div class="upload-preview__progress">
+              <span :style="{ width: `${item.progress}%` }" />
+            </div>
 
             <div class="upload-preview__size">
-              <span>33% done | Completed</span>
+              <span>{{ item.progress === 100 ? 'Completed' : `${item.progress}% done` }}</span>
               <span>{{byteToText(item.size)}}</span>
             </div>
           </figcaption>
@@ -131,22 +133,24 @@ export default {
               thumbnail,
               ratio,
               color: [colorArray[0].join(','), colorArray[1].join(',')],
+              // for upload progress
+              progress: 0,
             });
           };
         }
       }
     },
     uploadPhotos() {
-      this.photos.forEach(item => this.uploadToStorage(item));
+      this.photos.forEach(this.uploadToStorage);
     },
-    uploadToStorage({ file, name, ratio, color }) {
+    uploadToStorage({ file, name, ratio, color }, index) {
       const upload = storage.child(`images/${name}`).put(file);
 
       // upload progress
-      upload.on('state_changed', (snapshot) => {
-        const { bytesTransferred, totalBytes } = snapshot;
-        const progress = (bytesTransferred / totalBytes) * 100;
-        console.log(progress);
+      upload.on('state_changed', ({ bytesTransferred, totalBytes }) => {
+        const progress = Math.floor((bytesTransferred / totalBytes) * 100);
+        // change photo progress
+        this.photos[index].progress = progress;
       // error occured
       }, () => {
       // upload success
