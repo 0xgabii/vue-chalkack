@@ -92,8 +92,8 @@ export default {
     },
 
     byteToText(byte) {
-      const kb = Math.round(byte / 1024);
-      const mb = Math.round(kb / 1024);
+      const kb = (byte / 1024).toFixed(1);
+      const mb = (kb / 1024).toFixed(1);
 
       if (kb < 1024) {
         return `${kb} KB`;
