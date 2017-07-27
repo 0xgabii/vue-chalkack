@@ -167,7 +167,8 @@ export default {
       }
     },
     uploadPhotos() {
-      this.photos.forEach(this.uploadToStorage);
+      // exclude photos uploaded or uploading
+      this.photos.filter(item => item.progress === 0).forEach(this.uploadToStorage);
     },
     uploadToStorage({ file, name, ratio, color }, index) {
       const upload = storage.child(`images/${name}`).put(file);
