@@ -1,60 +1,70 @@
 <template>
-  <modal
-    class="uploadPhoto"
-    title="Upload Your Photos"
-    @close="handleClose">
+  <transition name="uploader">
+    <div class="uploader">
+      <div class="uploader__backdrop" @click="handleClose" />
 
-    <div class="dropzone">
-      <input 
-        class="dropzone__uploader" 
-        type="file" 
-        accept="image/*" 
-        multiple
-        @change="handleFileChange"
-      />
-      <div class="dropzone-description">
-        <i class="ion-images" />
-        <h3>Click here or drag and drop files.</h3>
+      <div class="uploader-wrapper">
+        
+        <div class="uploader-header">
+          Upload your photos
+        </div>
+
+        <div class="uploader-body">
+
+          <div class="dropzone">
+            <input 
+              class="dropzone__uploader" 
+              type="file" 
+              accept="image/*" 
+              multiple
+              @change="handleFileChange"
+            />
+            <div class="dropzone-description">
+              <i class="ion-images" />
+              <h3>Click here or drag and drop files.</h3>
+            </div>
+          </div>
+
+          <div class="uploading" v-if="photos.length">
+            <h3 class="uploading__status">{{uploadText}}</h3>
+
+            <scroll class="uploading-body" :settings="{ suppressScrollX: true }">
+
+              <figure class="uploading-preview" v-for="(item, index) in photos">
+
+                <img class="uploading-preview__thumbnail" :src="item.thumbnail" />
+
+                <figcaption>
+                  <div class="uploading-preview__name">
+                    <span>{{item.name}}</span>
+                    <i class="ion-close-round" @click="removeUpload(index)" />
+                  </div>
+
+                  <div class="uploading-preview__progress">
+                    <span :style="{ width: `${item.progress}%` }" />
+                  </div>
+
+                  <div class="uploading-preview__size">
+                    <span>{{progressToText(item.progress)}}</span>
+                    <span>{{byteToText(item.size)}}</span>
+                  </div>
+                </figcaption>
+
+              </figure>
+
+            </scroll>
+
+          </div>
+        </div>
+
+        <div class="uploader-footer">
+          <button class="submit" @click="uploadPhotos">Add photos to album</button>
+        </div>
+
       </div>
-    </div>
-
-    <div class="upload" v-if="photos.length">
-      <h3 class="upload__status">{{uploadText}}</h3>
-
-      <scroll class="upload-body" :settings="{ suppressScrollX: true }">
-
-        <figure class="upload-preview" v-for="(item, index) in photos">
-
-          <img class="upload-preview__thumbnail" :src="item.thumbnail" />
-
-          <figcaption>
-            <div class="upload-preview__name">
-              <span>{{item.name}}</span>
-              <i class="ion-close-round" @click="removeUpload(index)" />
-            </div>
-
-            <div class="upload-preview__progress">
-              <span :style="{ width: `${item.progress}%` }" />
-            </div>
-
-            <div class="upload-preview__size">
-              <span>{{progressToText(item.progress)}}</span>
-              <span>{{byteToText(item.size)}}</span>
-            </div>
-          </figcaption>
-
-        </figure>
-
-      </scroll>
 
     </div>
-
-    <template slot="footer">
-      <button class="cancel" @click="handleClose">Cancel</button>
-      <button class="submit" @click="uploadPhotos">Add photos to album</button>
-    </template>
-
-  </modal>  
+  </transition> 
 </template>
 
 <script>
@@ -83,7 +93,7 @@ const isFileImage = (fileName) => {
 };
 
 export default {
-  name: 'UploadPhotoModal',
+  name: 'Uploader',
   props: {
     album: String,
     user: String,
@@ -108,8 +118,7 @@ export default {
   },
   methods: {
     handleClose() {
-      const { albumName } = this.$route.params;
-      this.$router.replace({ name: 'AlbumPage', params: { albumName } });
+      this.$emit('close');
     },
 
     byteToText(byte) {

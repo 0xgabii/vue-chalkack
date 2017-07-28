@@ -5,8 +5,6 @@ import MainPage from '~components/UserPage/Pages/Main';
 import CreateAlbum from '~components/UserPage/Modals/CreateAlbum';
 
 import AlbumPage from '~components/UserPage/Pages/Album';
-import UploadPhoto from '~components/UserPage/Modals/UploadPhoto';
-
 
 export default [
   {
@@ -30,13 +28,6 @@ export default [
         path: ':albumName',
         name: 'AlbumPage',
         component: AlbumPage,
-        children: [
-          {
-            path: 'upload',
-            name: 'UploadPhoto',
-            component: UploadPhoto,
-          },
-        ],
       },
     ],
   },

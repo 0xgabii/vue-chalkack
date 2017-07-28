@@ -1,13 +1,19 @@
 <template>
   <section>
-    <button @click="openUploadPhoto">Upload</button>
+    <button @click="uploaderOpen = true">Upload</button>
     {{ album }}
+
+    <uploader 
+      v-show="uploaderOpen" 
+      :album="album.key" 
+      :user="me.id"
+      @close="uploaderOpen = false"
+    />
 
     <div class="dd" v-for="item in photos">
       <img :src="item.src" />
     </div>
 
-    <router-view v-bind="modalProps"></router-view>
   </section>
 </template>
 
@@ -17,28 +23,20 @@ import { mapState } from 'vuex';
 import albums from '~helpers/api/albums';
 import photos from '~helpers/api/photos';
 
+import Uploader from '../../Common/Uploader';
+
 export default {
   name: 'AlbumPage',
   data: () => ({
     album: {},
     photos: [],
+
+    uploaderOpen: false,
   }),
   computed: {
     ...mapState('auth', [
       'me',
     ]),
-    modalProps() {
-      const { name } = this.$route;
-
-      if (name === 'UploadPhoto') {
-        return {
-          album: this.album.key,
-          user: this.me.id,
-        };
-      }
-
-      return {};
-    },
   },
   watch: {
     me() {
@@ -79,12 +77,12 @@ export default {
         }
       });
     },
-    openUploadPhoto() {
-      this.$router.push({ name: 'UploadPhoto' });
-    },
   },
   created() {
     this.listener();
+  },
+  components: {
+    Uploader,
   },
 };
 </script>

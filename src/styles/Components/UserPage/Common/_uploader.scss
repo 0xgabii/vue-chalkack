@@ -1,12 +1,54 @@
-.uploadPhoto {
+.uploader-enter-active,
+.uploader-leave-active {
+  transform-origin: 100% 0%;
+  transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);  
+}
+.uploader-enter,
+.uploader-leave-to {
+  opacity: 0;
+  transform: scale(0);
+}
 
-  .modal-content {
+.uploader {
+
+  &,
+  &__backdrop {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    top: 0;
+    z-index: 3;
+  }
+
+  &-wrapper {
+    position: fixed;
+    right: 1rem;
+    top: 1rem;
+    z-index: 5;
+    
+    padding: 0.75rem;
+    min-width: 25rem;
+    background-color: white;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12);
+  }
+
+  &-header {
+
+  }
+
+  &-body {
     display: flex;
+  }
+
+  &-footer {
+
   }
 
   .dropzone {
     position: relative;
-    width: 20rem;
+    min-width: 25rem;
     height: 20rem;
 
     margin: 1rem;
@@ -54,7 +96,7 @@
     }
   }
 
-  .upload {
+  .uploading {
     width: 25rem;
 
     &__status {
