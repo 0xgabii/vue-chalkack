@@ -6,7 +6,7 @@
       <div class="uploader-wrapper">
         
         <div class="uploader-header">
-          Upload your photos
+          <h3>Upload your photos</h3>
         </div>
 
         <div class="uploader-body">
@@ -26,7 +26,15 @@
           </div>
 
           <div class="uploading" v-if="photos.length">
-            <h3 class="uploading__status">{{uploadText}}</h3>
+            <div class="uploading__status">
+              <h3>{{uploadText}}</h3>
+              <button 
+                class="button--alert" 
+                :class="{ disabled: uploadProgressPhotos.length }"
+                @click="uploadPhotos">
+                Start upload
+              </button>
+            </div>
 
             <scroll class="uploading-body" :settings="{ suppressScrollX: true }">
 
@@ -55,10 +63,6 @@
             </scroll>
 
           </div>
-        </div>
-
-        <div class="uploader-footer">
-          <button class="submit" @click="uploadPhotos">Add photos to album</button>
         </div>
 
       </div>
@@ -102,16 +106,24 @@ export default {
     photos: [],
   }),
   computed: {
+    uploadProgressPhotos() {
+      return this.photos.filter(item => item.progress > 0 && item.progress < 100);
+    },
+    uploadCompletePhotos() {
+      return this.photos.filter(item => item.progress === 100);
+    },
     uploadText() {
-      const { photos: p } = this;
-      const uploadProgress = p.filter(item => item.progress > 0 && item.progress <= 100).length;
-      const uploadComplete = p.filter(item => item.progress === 100).length;
+      const {
+        uploadCompletePhotos,
+        uploadProgressPhotos,
+      } = this;
 
-      if (uploadComplete === p.length) {
-        return 'Upload complete!';
-      } else if (uploadProgress) {
-        return `${uploadComplete}Photos uploaded`;
-      }
+      const uploadPhotos = this.photos.length;
+      const uploadComplete = uploadCompletePhotos.length;
+      const uploadProgress = uploadProgressPhotos.length;
+
+      if (uploadPhotos === uploadComplete) return 'Upload complete!';
+      else if (uploadProgress) return `Uploading photos (${uploadProgress})`;
 
       return 'Wait for upload';
     },
@@ -176,28 +188,30 @@ export default {
       }
     },
     uploadPhotos() {
-      // exclude photos uploaded or uploading
-      this.photos.filter(item => item.progress === 0).forEach(this.uploadToStorage);
+      // disable when uploading photos
+      if (!this.uploadProgressPhotos.length) this.photos.forEach(this.uploadToStorage);
     },
-    uploadToStorage({ file, name, ratio, color }, index) {
-      const upload = storage.child(`images/${name}`).put(file);
+    uploadToStorage({ file, name, ratio, color, progress }, index) {
+      // exclude photos uploaded or uploading
+      if (progress === 0) {
+        const upload = storage.child(`images/${name}`).put(file);
 
-      // upload progress
-      upload.on('state_changed', ({ bytesTransferred, totalBytes }) => {
-        const progress = Math.floor((bytesTransferred / totalBytes) * 100);
-        // change photo progress
-        this.photos[index].progress = progress;
-      // error occured
-      }, () => {
-      // upload success
-      }, () => {
-        this.uploadToFirebase({
-          name,
-          ratio,
-          color,
-          url: upload.snapshot.downloadURL,
+        // upload progress
+        upload.on('state_changed', ({ bytesTransferred, totalBytes }) => {
+          // change photo progress
+          this.photos[index].progress = Math.floor((bytesTransferred / totalBytes) * 100);
+        // error occured
+        }, () => {
+        // upload success
+        }, () => {
+          this.uploadToFirebase({
+            name,
+            ratio,
+            color,
+            url: upload.snapshot.downloadURL,
+          });
         });
-      });
+      }
     },
     uploadToFirebase({
       name,
