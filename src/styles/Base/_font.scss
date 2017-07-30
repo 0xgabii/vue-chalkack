@@ -1,9 +1,10 @@
-// base font
-@import url(https://fonts.googleapis.com/css?family=Lato);
+// KR font
+@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
+// EN font
+@import url(https://fonts.googleapis.com/css?family=Roboto);
 // icon
-@import url(https://fonts.googleapis.com/icon?family=Material+Icons);
 @import url(http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css);
 
-body {
-  font-family: 'Lato', sans-serif;
+body, body * {
+  font-family: 'Roboto', 'Noto Sans KR', sans-serif !important;
 }
