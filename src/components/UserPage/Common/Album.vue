@@ -27,7 +27,6 @@ export default {
   name: 'Album',
   props: {
     data: {
-      '.key': String,
       name: String,
       tags: Array,
       date: Number,
