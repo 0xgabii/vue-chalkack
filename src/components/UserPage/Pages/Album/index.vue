@@ -10,9 +10,10 @@
       @close="uploaderOpen = false"
     />
 
-    <div class="dd" v-for="item in photos">
-      <img :src="item.src" />
-    </div>
+    <photo 
+      v-for="item in photos" 
+      :data="item"
+    />
 
   </section>
 </template>
@@ -24,6 +25,7 @@ import albums from '~helpers/api/albums';
 import photos from '~helpers/api/photos';
 
 import Uploader from '../../Common/Uploader';
+import Photo from '../../Common/Photo';
 
 export default {
   name: 'AlbumPage',
@@ -83,6 +85,7 @@ export default {
   },
   components: {
     Uploader,
+    Photo,
   },
 };
 </script>
