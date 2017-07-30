@@ -6,3 +6,25 @@ html, body, #app {
 * {
   box-sizing: border-box;
 }
+
+.button {
+  padding: 0.75rem 1rem;
+  border-radius: 0.3rem;
+  border: none;
+  outline: none;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: $shadow-1;
+
+  &--alert {
+    @extend .button;
+
+    background-color: $red;
+    color: white;
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
