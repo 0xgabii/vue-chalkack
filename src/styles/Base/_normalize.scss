@@ -15,6 +15,7 @@ html, body, #app {
   font-size: 0.9rem;
   cursor: pointer;
   box-shadow: $shadow-1;
+  transition: all 0.3s;
 
   &--alert {
     @extend .button;
@@ -26,5 +27,9 @@ html, body, #app {
   &.disabled {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+
+  &:hover {
+    border-radius: 3rem;
   }
 }
