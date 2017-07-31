@@ -1,7 +1,6 @@
 <template>
   <section>
     <button @click="uploaderOpen = true">Upload</button>
-    {{ album }}
 
     <uploader 
       v-show="uploaderOpen" 
@@ -10,10 +9,17 @@
       @close="uploaderOpen = false"
     />
 
-    <photo 
+    <div 
+      class="photos" 
       v-for="item in photos" 
-      :data="item"
-    />
+      :key="item">
+      <photo 
+        v-for="(photo, index) in item"
+        :key="photo"
+        :data="photo"
+        :height="250"
+      />
+    </div>
 
   </section>
 </template>
@@ -26,6 +32,41 @@ import photos from '~helpers/api/photos';
 
 import Uploader from '../../Common/Uploader';
 import Photo from '../../Common/Photo';
+
+const photosIntoColumn = (photoList) => {
+  const one = [];
+  const two = [];
+  const three = [];
+
+  const returnTotalRatio = (arr) => {
+    if (arr.length) return arr.map(item => item.ratio).reduce((p, c) => p + c);
+    return 0;
+  };
+
+  photoList.reverse().forEach((photo, index) => {
+    const oneRatio = returnTotalRatio(one);
+    const twoRatio = returnTotalRatio(two);
+    const threeRatio = returnTotalRatio(three);
+
+    if ((oneRatio <= twoRatio && oneRatio <= threeRatio) ||
+      (oneRatio === twoRatio && oneRatio === threeRatio)) {
+      console.log('one', index);
+      one.push(photo);
+    } else if (oneRatio > twoRatio && twoRatio <= threeRatio) {
+      console.log('two', index);
+      two.push(photo);
+    } else {
+      console.log('three', index);
+      three.push(photo);
+    }
+  });
+
+  return [
+    one,
+    two,
+    three,
+  ];
+};
 
 export default {
   name: 'AlbumPage',
@@ -68,16 +109,19 @@ export default {
       });
     },
     getPhotos(list) {
-      // reset state
-      this.photos = [];
+      const arr = [];
       // find photos by album key
       Object.keys(list).forEach((key) => {
         const item = list[key];
 
         if (item.album === this.album.key) {
-          this.photos.push(item);
+          arr.push(item);
         }
       });
+      // reset state
+      this.photos = [];
+      // mix photos & bind to data
+      this.photos = photosIntoColumn(arr);
     },
   },
   created() {
