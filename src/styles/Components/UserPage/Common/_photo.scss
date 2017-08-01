@@ -2,12 +2,96 @@
   display: inline-block;
 
   position: relative;
-  margin-right: 0.7rem;
+  margin: 1rem;
   height: 15rem;
   overflow: hidden;
+  box-shadow: $shadow-3;
 
-  &:hover img {
-    transform: scale(1.5);
+  &:hover {
+    
+    .checkbox {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    img {
+      transform: scale(1.5);
+    }
+  }
+
+  &.selected {
+    border: 5px solid #3ba263;
+
+    &:after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 0;
+      border-top: 4rem solid #3ba263;
+      border-bottom: 4rem solid transparent;
+      border-left: 4rem solid transparent;
+    }
+
+    .checkbox {
+      top: 0.5rem;
+      right: 0.5rem;
+      opacity: 1;
+      transform: scale(1);
+
+      &__control:before {
+        border-color: transparent;
+        background-color: transparent;
+      }
+    }
+  }
+
+  .checkbox {
+    position: absolute;
+    top: 0.8rem;
+    right: 0.75rem;
+    z-index: 10;
+    
+    padding: 0.67rem;
+    opacity: 0;
+    transform: scale(0);
+    transition: transform 0.3s, opacity 0.3s;
+
+    &__control {
+      position: absolute;
+      left: 0;
+      top: 0;
+      cursor: pointer;
+      
+      &:hover:before {
+        border: 1px solid #3267d1;
+      }
+      
+      &:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        width: 17px;
+        height: 17px;
+        background-color: white;
+        border: 1px solid black;
+      }
+      
+      &:after {
+        content: '\2713';
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        color: white;
+        font-size: 1.2rem;
+        line-height: 0.8;
+        transition: all .2s;
+      }
+    }
+
+    input {
+      position: absolute;
+      opacity: 0;
+    }
   }
 
   img {
