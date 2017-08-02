@@ -17,11 +17,6 @@ import install from '~helpers/globalComponents';
 
 install();
 
-// install asynclistener
-import installAsyncListener from '~helpers/api/asyncListener';
-
-installAsyncListener();
-
 Vue.config.productionTip = false;
 
 /* eslint-disable no-new */
