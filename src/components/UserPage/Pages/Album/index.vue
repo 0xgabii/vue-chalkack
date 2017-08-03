@@ -1,6 +1,25 @@
 <template>
-  <section>
-    <button @click="uploaderOpen = true">Upload</button>
+  <section class="albumPage">
+
+    <aside class="sidebar">
+
+       <button @click="uploaderOpen = true">Upload</button>
+
+    </aside>
+
+    <scroll class="content" :y="false">
+      <div
+        class="photos" 
+        v-for="item in photos" 
+        :key="item">
+        <photo 
+          v-for="(photo, index) in item"
+          :key="photo"
+          :data="photo"
+          :height="photoHeight"
+        />
+      </div>
+    </scroll>
 
     <uploader 
       v-show="uploaderOpen" 
@@ -8,18 +27,6 @@
       :user="me.id"
       @close="uploaderOpen = false"
     />
-
-    <div 
-      class="photos" 
-      v-for="item in photos" 
-      :key="item">
-      <photo 
-        v-for="(photo, index) in item"
-        :key="photo"
-        :data="photo"
-        :height="250"
-      />
-    </div>
 
   </section>
 </template>
@@ -32,6 +39,7 @@ import photos from '~helpers/api/photos';
 
 import Uploader from '../../Common/Uploader';
 import Photo from '../../Common/Photo';
+import Scroll from '../../Common/Scroll';
 
 const photosIntoColumn = (photoList) => {
   const one = [];
@@ -43,20 +51,17 @@ const photosIntoColumn = (photoList) => {
     return 0;
   };
 
-  photoList.reverse().forEach((photo, index) => {
+  photoList.reverse().forEach((photo) => {
     const oneRatio = returnTotalRatio(one);
     const twoRatio = returnTotalRatio(two);
     const threeRatio = returnTotalRatio(three);
 
     if ((oneRatio <= twoRatio && oneRatio <= threeRatio) ||
       (oneRatio === twoRatio && oneRatio === threeRatio)) {
-      console.log('one', index);
       one.push(photo);
     } else if (oneRatio > twoRatio && twoRatio <= threeRatio) {
-      console.log('two', index);
       two.push(photo);
     } else {
-      console.log('three', index);
       three.push(photo);
     }
   });
@@ -73,6 +78,8 @@ export default {
   data: () => ({
     album: {},
     photos: [],
+
+    photoHeight: 200,
 
     uploaderOpen: false,
   }),
@@ -127,9 +134,14 @@ export default {
   created() {
     this.listener();
   },
+  mounted() {
+    const { height } = document.querySelector('.albumPage').getBoundingClientRect();
+    this.photoHeight = (height - 160) / 3;
+  },
   components: {
     Uploader,
     Photo,
+    Scroll,
   },
 };
 </script>

@@ -1,6 +1,8 @@
 .userPage {
-  
+  height: 100%;
+
   @import 'Common/all';
   @import 'Modals/all';
   @import 'Pages/all';
+  @import 'Layout/all';
 }

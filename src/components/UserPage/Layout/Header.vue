@@ -1,5 +1,5 @@
 <template>
-  <header>
+  <header class="header">
     {{ me.displayName }}
 
     <button @click="signOut">LogOut</button>

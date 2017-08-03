@@ -1,9 +1,6 @@
 <template>
   <section class="userPage">
-    UserPage
-    {{me}}
-
-    <button @click="signOut">logout</button>
+    <layout-header />
 
     <router-view></router-view>
   
@@ -17,7 +14,9 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState } from 'vuex';
+
+import LayoutHeader from './Layout/Header';
 
 import FirstTimeUser from './Modals/FirstTimeUser';
 
@@ -34,12 +33,9 @@ export default {
       return false;
     },
   },
-  methods: {
-    ...mapActions('auth', [
-      'signOut',
-    ]),
-  },
   components: {
+    LayoutHeader,
+
     FirstTimeUserModal: FirstTimeUser,
   },
 };
