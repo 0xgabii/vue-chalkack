@@ -36,11 +36,11 @@ export default {
     },
     scrollPercent() {
       const { xScroll, yScroll } = this;
-      const { scrollWidth, scrollHeight } = this.scrollOption;
+      const { maxScrollWidth, maxScrollHeight } = this.scrollOption;
 
       return {
-        x: (xScroll / -scrollWidth) * 100,
-        y: (yScroll / -scrollHeight) * 100,
+        x: (xScroll / -maxScrollWidth) * 100,
+        y: (yScroll / -maxScrollHeight) * 100,
       };
     },
     contentStyle() {
@@ -53,23 +53,23 @@ export default {
   },
   methods: {
     moveX(scroll) {
-      const { scrollWidth } = this.scrollOption;
+      const { maxScrollWidth } = this.scrollOption;
 
       if (this.xScroll + scroll >= 0) {
         this.xScroll = 0;
-      } else if (this.xScroll + scroll <= -scrollWidth) {
-        this.xScroll = -scrollWidth;
+      } else if (this.xScroll + scroll <= -maxScrollWidth) {
+        this.xScroll = -maxScrollWidth;
       } else {
         this.xScroll += scroll;
       }
     },
     moveY(scroll) {
-      const { scrollHeight } = this.scrollOption;
+      const { maxScrollHeight } = this.scrollOption;
 
       if (this.yScroll + scroll >= 0) {
         this.yScroll = 0;
-      } else if (this.yScroll + scroll <= -scrollHeight) {
-        this.yScroll = -scrollHeight;
+      } else if (this.yScroll + scroll <= -maxScrollHeight) {
+        this.yScroll = -maxScrollHeight;
       } else {
         this.yScroll += scroll;
       }
@@ -95,10 +95,8 @@ export default {
       } = document.querySelector(this.root);
 
       this.scrollOption = {
-        scrollWidth,
-        scrollHeight,
-        clientWidth,
-        clientHeight,
+        maxScrollWidth: Math.max(0, scrollWidth - clientWidth),
+        maxScrollHeight: Math.max(0, scrollHeight - clientHeight),
       };
     },
   },
@@ -114,6 +112,9 @@ export default {
       root.addEventListener('DOMMouseScroll', this.handleWheel);
       this.handleResize();
     });
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.handleResize);
   },
 };
 </script>
