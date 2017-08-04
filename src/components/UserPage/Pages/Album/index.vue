@@ -7,7 +7,7 @@
 
     </aside>
 
-    <scroll class="content" :y="false">
+    <scroll class="content" :vertical="false">
       <div
         class="photos" 
         v-for="item in photos" 

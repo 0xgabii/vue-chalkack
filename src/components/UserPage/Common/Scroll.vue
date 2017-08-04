@@ -1,9 +1,9 @@
 <template>
   <div class="vScroll" :id="`scroll-${this.id}`">
-    <div class="vScroll__content">
+    <div class="vScroll__content" :style="contentStyle">
       <slot />
     </div>
-
+    {{ scrollPercent }}
     <div class="vScroll__bar--x" :bar="scrollPercent" />
     <div class="vScroll__bar--y" />
   </div>
@@ -24,7 +24,10 @@ export default {
   },
   data: () => ({
     id: 0,
-    scroll: 0,
+
+    xScroll: 0,
+    yScroll: 0,
+
     scrollOption: {},
   }),
   computed: {
@@ -32,25 +35,56 @@ export default {
       return `#scroll-${this.id}`;
     },
     scrollPercent() {
-      return (this.scroll / -this.scrollOption.scrollWidth) * 100;
+      const { xScroll, yScroll } = this;
+      const { scrollWidth, scrollHeight } = this.scrollOption;
+
+      return {
+        x: (xScroll / -scrollWidth) * 100,
+        y: (yScroll / -scrollHeight) * 100,
+      };
+    },
+    contentStyle() {
+      const { xScroll, yScroll } = this;
+
+      return {
+        transform: `translate(${xScroll}px, ${yScroll}px)`,
+      };
     },
   },
   methods: {
+    moveX(scroll) {
+      const { scrollWidth } = this.scrollOption;
+
+      if (this.xScroll + scroll >= 0) {
+        this.xScroll = 0;
+      } else if (this.xScroll + scroll <= -scrollWidth) {
+        this.xScroll = -scrollWidth;
+      } else {
+        this.xScroll += scroll;
+      }
+    },
+    moveY(scroll) {
+      const { scrollHeight } = this.scrollOption;
+
+      if (this.yScroll + scroll >= 0) {
+        this.yScroll = 0;
+      } else if (this.yScroll + scroll <= -scrollHeight) {
+        this.yScroll = -scrollHeight;
+      } else {
+        this.yScroll += scroll;
+      }
+    },
     handleWheel(e) {
-      const content = document.querySelector(`${this.root} .vScroll__content`);
+      const { vertical, horizontal } = this;
       const delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail))) * 150;
 
-      console.log(this.scroll + delta);
-
-      if (this.scroll + delta >= 0) {
-        this.scroll = 0;
-      } else if (this.scroll + delta <= -this.scrollOption.scrollWidth) {
-        this.scroll = -this.scrollOption.scrollWidth;
+      if (vertical && horizontal) {
+        this.moveY(delta);
+      } else if (vertical && !horizontal) {
+        this.moveY(delta);
       } else {
-        this.scroll += delta;
+        this.moveX(delta);
       }
-
-      content.style.transform = `translateX(${this.scroll}px)`;
     },
     handleResize() {
       const {
