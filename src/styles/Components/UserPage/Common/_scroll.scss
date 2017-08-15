@@ -1,6 +1,45 @@
 .vScroll {
+  position: relative;
 
   &__content {
     transition: all 0.3s;
+  }
+
+  &__rail {
+    position: absolute;
+
+    &--x {
+      left: 0;
+      right: 0;
+      bottom: 2px;
+
+      height: 10px;
+
+      background-color: transparent;
+    }
+    
+    &--y {
+
+    }
+  }
+
+  &__bar {
+    position: absolute;
+
+    transition: all 0.2s;
+
+    &--x {
+      left: 2px;
+      bottom: 0;
+
+      height: 6px;
+      border-radius: 7px;
+
+      background-color: black;
+    }
+    
+    &--y {
+
+    }
   }
 }

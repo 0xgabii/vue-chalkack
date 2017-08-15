@@ -1,11 +1,25 @@
 <template>
   <div class="vScroll" :id="`scroll-${this.id}`">
+
     <div class="vScroll__content" :style="contentStyle">
       <slot />
     </div>
+
     {{ scrollPercent }}
-    <div class="vScroll__bar--x" :bar="scrollPercent" />
-    <div class="vScroll__bar--y" />
+    
+    <div class="vScroll__rail vScroll__rail--x">
+      <div 
+        class="vScroll__bar vScroll__bar--x" 
+        :style="scrollStyle.x"
+      />
+    </div>
+  
+    <div class="vScroll__rail vScroll__rail--y">
+      <div 
+        class="vScroll__bar vScroll__bar--y" 
+        :style="scrollStyle.y" 
+      />
+    </div>
   </div>
 </template>
 
@@ -20,6 +34,10 @@ export default {
     vertical: {
       type: Boolean,
       default: true,
+    },
+    scrollAtOnce: {
+      type: Number,
+      default: 100,
     },
   },
   data: () => ({
@@ -39,15 +57,35 @@ export default {
       const { maxScrollWidth, maxScrollHeight } = this.scrollOption;
 
       return {
-        x: (xScroll / -maxScrollWidth) * 100,
-        y: (yScroll / -maxScrollHeight) * 100,
+        x: (xScroll / maxScrollWidth) * 100,
+        y: (yScroll / maxScrollHeight) * 100,
       };
     },
     contentStyle() {
       const { xScroll, yScroll } = this;
 
       return {
-        transform: `translate(${xScroll}px, ${yScroll}px)`,
+        transform: `translate(${-xScroll}px, ${-yScroll}px)`,
+      };
+    },
+    scrollStyle() {
+      const { xScroll, yScroll } = this;
+      const {
+        clientWidth,
+        clientHeight,
+        maxScrollWidth,
+        maxScrollHeight,
+      } = this.scrollOption;
+
+      return {
+        x: {
+          width: `${clientWidth - maxScrollWidth}px`,
+          left: `${xScroll}px`,
+        },
+        y: {
+          height: `${clientHeight - maxScrollHeight}px`,
+          top: `${yScroll}px`,
+        },
       };
     },
   },
@@ -55,10 +93,10 @@ export default {
     moveX(scroll) {
       const { maxScrollWidth } = this.scrollOption;
 
-      if (this.xScroll + scroll >= 0) {
+      if (this.xScroll + scroll <= 0) {
         this.xScroll = 0;
-      } else if (this.xScroll + scroll <= -maxScrollWidth) {
-        this.xScroll = -maxScrollWidth;
+      } else if (this.xScroll + scroll >= maxScrollWidth) {
+        this.xScroll = maxScrollWidth;
       } else {
         this.xScroll += scroll;
       }
@@ -66,17 +104,17 @@ export default {
     moveY(scroll) {
       const { maxScrollHeight } = this.scrollOption;
 
-      if (this.yScroll + scroll >= 0) {
+      if (this.yScroll + scroll <= 0) {
         this.yScroll = 0;
-      } else if (this.yScroll + scroll <= -maxScrollHeight) {
-        this.yScroll = -maxScrollHeight;
+      } else if (this.yScroll + scroll >= maxScrollHeight) {
+        this.yScroll = maxScrollHeight;
       } else {
         this.yScroll += scroll;
       }
     },
     handleWheel(e) {
-      const { vertical, horizontal } = this;
-      const delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail))) * 150;
+      const { vertical, horizontal, scrollAtOnce } = this;
+      const delta = -Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail))) * scrollAtOnce;
 
       if (vertical && horizontal) {
         this.moveY(delta);
@@ -95,6 +133,9 @@ export default {
       } = document.querySelector(this.root);
 
       this.scrollOption = {
+        scrollWidth,
+        scrollHeight,
+        clientWidth,
         maxScrollWidth: Math.max(0, scrollWidth - clientWidth),
         maxScrollHeight: Math.max(0, scrollHeight - clientHeight),
       };
