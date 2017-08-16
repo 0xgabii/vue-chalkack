@@ -23,6 +23,8 @@ const THUMB_PREFIX = 'thumb_';
  * we write the public URL to the Firebase Realtime Database.
  */
 exports.generateThumbnail = functions.storage.object().onChange(event => {
+  console.log(event);
+  console.log(event.data);
   // File and directory paths.
   const filePath = event.data.name;
   const fileDir = path.dirname(filePath);
@@ -89,5 +91,30 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
     const fileUrl = originalResult[0];
     // Add the URLs to the Database
     return admin.database().ref('images').push({path: fileUrl, thumbnail: thumbFileUrl});
+  });
+});
+
+exports.photo = functions.https.onRequest((req, res) => {
+  const { name, width, height } = req.query;
+
+  const bucket = gcs.bucket('vue-chalkack.appspot.com');
+  const filePath = `images/${name}`;
+  const file = bucket.file(filePath);
+
+  file.getSignedUrl({
+    action: 'read',
+    expires: '03-01-2500',
+  }).then((url) => {
+    console.log(url);
+    const generate = spawn('convert', [url[0], '-thumbnail', `${width}x${height}`, '-'])
+
+    res.writeHead(200, {
+      'Content-Type': 'image/jpeg',
+    });
+
+    generate.stdout.pipe(res);
+
+  }).catch((error) => {
+    res.status(404).send(error.code);
   });
 });
