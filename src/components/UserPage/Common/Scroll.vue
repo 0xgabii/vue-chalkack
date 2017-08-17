@@ -69,22 +69,42 @@ export default {
       };
     },
     scrollStyle() {
-      const { xScroll, yScroll } = this;
+      const {
+        x: xScrollPercent,
+        y: yScrollPercent,
+      } = this.scrollPercent;
       const {
         clientWidth,
         clientHeight,
-        maxScrollWidth,
-        maxScrollHeight,
+        scrollWidth,
+        scrollHeight,
       } = this.scrollOption;
+
+      /*
+        Exact size of the scrollbar
+        visible part * (visible part / scroll part)
+      */
+      const barSize = {
+        x: clientWidth * (clientWidth / scrollWidth),
+        y: clientHeight * (clientHeight / scrollHeight),
+      };
+      /*
+        Exact position of the scrollbar
+        (visible part - scrollbar size) * (scrolling percentage / 100)
+      */
+      const barPosition = {
+        x: (clientWidth - barSize.x) * (xScrollPercent / 100),
+        y: (clientHeight - barSize.y) * (yScrollPercent / 100),
+      };
 
       return {
         x: {
-          width: `${clientWidth - maxScrollWidth}px`,
-          left: `${xScroll}px`,
+          width: `${barSize.x}px`,
+          left: `${barPosition.x}px`,
         },
         y: {
-          height: `${clientHeight - maxScrollHeight}px`,
-          top: `${yScroll}px`,
+          height: `${barSize.y}px`,
+          top: `${barPosition.y}px`,
         },
       };
     },
@@ -136,6 +156,7 @@ export default {
         scrollWidth,
         scrollHeight,
         clientWidth,
+        clientHeight,
         maxScrollWidth: Math.max(0, scrollWidth - clientWidth),
         maxScrollHeight: Math.max(0, scrollHeight - clientHeight),
       };
