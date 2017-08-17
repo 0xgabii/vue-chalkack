@@ -43,29 +43,38 @@ export default {
   data: () => ({
     id: 0,
 
-    xScroll: 0,
-    yScroll: 0,
+    scroll: {
+      x: 0,
+      y: 0,
+    },
 
-    scrollOption: {},
+    scrollEnv: {
+      scrollWidth: 0,
+      scrollHeight: 0,
+      clientWidth: 0,
+      clientHeight: 0,
+      maxScrollWidth: 0,
+      maxScrollHeight: 0,
+    },
   }),
   computed: {
     root() {
       return `#scroll-${this.id}`;
     },
     scrollPercent() {
-      const { xScroll, yScroll } = this;
-      const { maxScrollWidth, maxScrollHeight } = this.scrollOption;
+      const { x, y } = this.scroll;
+      const { maxScrollWidth, maxScrollHeight } = this.scrollEnv;
 
       return {
-        x: (xScroll / maxScrollWidth) * 100,
-        y: (yScroll / maxScrollHeight) * 100,
+        x: (x / maxScrollWidth) * 100,
+        y: (y / maxScrollHeight) * 100,
       };
     },
     contentStyle() {
-      const { xScroll, yScroll } = this;
+      const { x, y } = this.scroll;
 
       return {
-        transform: `translate(${-xScroll}px, ${-yScroll}px)`,
+        transform: `translate(${-x}px, ${-y}px)`,
       };
     },
     scrollStyle() {
@@ -78,7 +87,7 @@ export default {
         clientHeight,
         scrollWidth,
         scrollHeight,
-      } = this.scrollOption;
+      } = this.scrollEnv;
 
       /*
         Exact size of the scrollbar
@@ -110,26 +119,20 @@ export default {
     },
   },
   methods: {
-    moveX(scroll) {
-      const { maxScrollWidth } = this.scrollOption;
+    moveBar(newScroll, category) {
+      const { maxScrollWidth, maxScrollHeight } = this.scrollEnv;
 
-      if (this.xScroll + scroll <= 0) {
-        this.xScroll = 0;
-      } else if (this.xScroll + scroll >= maxScrollWidth) {
-        this.xScroll = maxScrollWidth;
-      } else {
-        this.xScroll += scroll;
-      }
-    },
-    moveY(scroll) {
-      const { maxScrollHeight } = this.scrollOption;
+      const minScroll = 0;
+      const maxScroll = category === 'x' ? maxScrollWidth : maxScrollHeight;
 
-      if (this.yScroll + scroll <= 0) {
-        this.yScroll = 0;
-      } else if (this.yScroll + scroll >= maxScrollHeight) {
-        this.yScroll = maxScrollHeight;
+      const currentScroll = this.scroll[category];
+
+      if (currentScroll + newScroll <= minScroll) {
+        this.scroll[category] = 0;
+      } else if (currentScroll + newScroll >= maxScroll) {
+        this.scroll[category] = maxScroll;
       } else {
-        this.yScroll += scroll;
+        this.scroll[category] += newScroll;
       }
     },
     handleWheel(e) {
@@ -137,11 +140,11 @@ export default {
       const delta = -Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail))) * scrollAtOnce;
 
       if (vertical && horizontal) {
-        this.moveY(delta);
+        this.moveBar(delta, 'y');
       } else if (vertical && !horizontal) {
-        this.moveY(delta);
+        this.moveBar(delta, 'y');
       } else {
-        this.moveX(delta);
+        this.moveBar(delta, 'x');
       }
     },
     handleResize() {
@@ -152,7 +155,12 @@ export default {
         clientHeight,
       } = document.querySelector(this.root);
 
-      this.scrollOption = {
+      this.scroll = {
+        x: 0,
+        y: 0,
+      };
+
+      this.scrollEnv = {
         scrollWidth,
         scrollHeight,
         clientWidth,
